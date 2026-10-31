@@ -42,3 +42,10 @@ Based on the 200-minute simulation profile:
 Open MATLAB, navigate to the folder, and run:
 ```matlab
 artificial_pancreas
+
+# Running Python Interactive Simulator
+Open PowerShell, navigate to your workspace, and run:
+
+PowerShell
+cd ~\Downloads
+python pancreas_gui.py
