@@ -1,51 +1,54 @@
-# Artificial Pancreas: Closed-Loop Blood Glucose PID Controller
+# Artificial Pancreas: Closed-Loop Blood Glucose Control & Simulation
 
 ![MATLAB](https://img.shields.io/badge/MATLAB-R2017a-blue.svg)
+![Simulink](https://img.shields.io/badge/Simulink-Programmatic-orange.svg)
 ![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![Simulink](https://img.shields.io/badge/Simulink-Automated-orange.svg)
+![GUI](https://img.shields.io/badge/Tkinter-Interactive%20GUI-green.svg)
 ![Domain](https://img.shields.io/badge/Domain-Biomedical%20%26%20Control-brightgreen.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-A dual-stack biomedical control system modeling an automated artificial pancreas using MATLAB/Simulink programmatic API and an interactive Python Tkinter GUI. The system regulates blood glucose levels via closed-loop PID insulin infusion in response to postprandial meal disturbances.
+A dual-stack biomedical control system modeling an automated artificial pancreas (insulin pump control system). This repository features both a programmatic **MATLAB/Simulink** API simulation and an interactive **Python Tkinter GUI** application to model closed-loop blood glucose regulation and postprandial meal disturbance rejection.
 
 ---
 
-## 📌 Project Overview & Engineering Highlights
+## 📌 System Overview & Engineering Highlights
 
-This project models an automated insulin pump regulating blood glucose around a target setpoint of 90 mg/dL, managing safety-critical physiological constraints to prevent fatal hypoglycemia.
+The artificial pancreas regulates blood glucose levels around a target baseline setpoint of **90 mg/dL**, managing safety-critical physiological constraints to prevent fatal hypoglycemia.
 
-- 🩸 **Patient Metabolic Dynamics**: Modeled using a first-order lag transfer function $G(s) = \frac{1}{30s + 1}$, representing the physiological delay of insulin absorption in human tissue.
-- 🎛️ **Safety-Critical PID Control**: Tuned conservatively ($P=1.5, I=0.05, D=2.0$) to guarantee an overdamped system response, prioritizing patient safety over rapid settling to avoid dangerous hypoglycemic dips.
-- 🍲 **Postprandial Meal Disturbance**: Injects a sudden glucose spike at $t = 60\text{ min}$ to simulate carbohydrate intake and test closed-loop disturbance rejection.
-- 🖥️ **Interactive Python GUI & Physical Saturation**: Features a custom Tkinter/Matplotlib application with real-time PID slider tuning and discrete physical constraints ($\text{insulin dose} \ge 0$).
-
----
-
-## 📈 System Response Analysis
-
-Based on the 200-minute simulation profile:
-1. **Basal Phase (0 - 60 min)**: System steadily tracks and locks onto the baseline target setpoint of 90 mg/dL.
-2. **Postprandial Recovery Phase (60 - 200 min)**: Upon meal ingestion at $t = 60\text{ min}$, glucose peaks at $\approx 115\text{ mg/dL}$. The PID controller infuses insulin to drive levels back to 90 mg/dL smoothly without severe undershoot.
+- 🩸 **Physiological Metabolism Model**: Modeled using a first-order lag transfer function $G(s) = \frac{1}{30s + 1}$, representing the time delay of subcutaneous insulin absorption into human tissue.
+- 🎛️ **Safety-Critical PID Control**: Tuned conservatively ($P=1.5, I=0.05, D=2.0$) to guarantee an *overdamped* system response, prioritizing patient safety over aggressive settling times to avoid dangerous glucose undershoot.
+- 🍲 **Postprandial Disturbance Rejection**: Simulates carbohydrate intake by injecting a sudden glucose surge of $+40\text{ mg/dL}$ at $t = 60\text{ minutes}$.
+- 🖥️ **Interactive Python Tkinter GUI**: A standalone desktop simulator with real-time PID parameter sliders ($K_p, K_i, K_d$), embedded Matplotlib plots, and discrete controller physical constraints ($\text{insulin dose} \ge 0$).
 
 ---
 
-## 🛠️ Tech Stack & Requirements
+## 🛠️ Dual-Stack Architecture
 
-- **MATLAB/Simulink**: R2017a or newer (programmatic model build)
-- **Python**: 3.x (`numpy`, `matplotlib`, `tkinter`)
+### 1. MATLAB / Simulink (`artificial_pancreas.m`)
+- Programmatically constructs the full Simulink block diagram using the MATLAB R2017a API (`add_block`, `add_line`).
+- Configures continuous-time transfer functions, step disturbance inputs, feedback error calculation, and dual-signal Scope monitoring (`Glucose_Monitor`).
+
+### 2. Python Interactive GUI (`pancreas_gui.py`)
+- Built with **Object-Oriented Programming (OOP)** using `tkinter` and `matplotlib.backends.backend_tkagg`.
+- Implements a discrete-time PID control algorithm with physical saturation constraints (the insulin pump can inject insulin, but cannot remove it from the bloodstream).
+- Features real-time parameter adjustment via interactive sliders to observe system stability and response curves dynamically.
 
 ---
 
-## 🚀 Quick Start
+## 📈 System Response & Simulation Analysis
 
-### 1. Running MATLAB Programmatic Simulink Model
-Open MATLAB, navigate to the folder, and run:
-```matlab
-artificial_pancreas
+| Phase | Time Window | System Behavior |
+|---|---|---|
+| **Basal Baseline** | $0 - 60\text{ min}$ | Glucose steadily tracks and locks onto the target setpoint ($90\text{ mg/dL}$). |
+| **Meal Intake** | $t = 60\text{ min}$ | Glucose spikes to $\approx 115\text{ mg/dL}$ due to carbohydrate ingestion. |
+| **Closed-Loop Recovery** | $60 - 200\text{ min}$ | PID controller infuses insulin, smoothly restoring glucose to $90\text{ mg/dL}$ without undershoot. |
 
-# Running Python Interactive Simulator
-Open PowerShell, navigate to your workspace, and run:
+---
 
-PowerShell
-cd ~\Downloads
-python pancreas_gui.py
+## 📂 Repository Structure
+
+```text
+.
+├── artificial_pancreas.m   # Programmatic Simulink model generation script
+├── pancreas_gui.py         # Standalone Python Tkinter interactive GUI application
+└── README.md               # Project documentation
